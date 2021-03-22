@@ -47,7 +47,6 @@ public final class ConfettiView: UIView {
         animation.keyTimes = [0, 0.5, 1]
         animation.isRemovedOnCompletion = false
 
-        layer.beginTime = CACurrentMediaTime()
         layer.birthRate = 1.0
 
         CATransaction.begin()
@@ -113,10 +112,12 @@ public final class ConfettiView: UIView {
 
     private final class Layer: CAEmitterLayer {
         func configure(with contents: [Content]) {
+            let beginTime = CACurrentMediaTime()
             emitterCells = contents.map { content in
                 let cell = CAEmitterCell()
 
                 cell.birthRate = 50.0
+                cell.beginTime = beginTime
                 cell.lifetime = 10.0
                 cell.velocity = CGFloat(cell.birthRate * cell.lifetime)
                 cell.velocityRange = cell.velocity / 2
