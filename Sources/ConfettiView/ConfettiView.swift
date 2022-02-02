@@ -26,7 +26,7 @@ public final class ConfettiView: UIView {
 
      - Parameters:
         - contents: The contents to be emitted as confetti.
-        - duration: The amount of time in seconds to emit confetti before fading out;
+        - duration: The amount of time in seconds to emit confetti;
                     3.0 seconds by default.
     */
     public func emit(with contents: [Content],
@@ -48,23 +48,7 @@ public final class ConfettiView: UIView {
         animation.isRemovedOnCompletion = false
 
         layer.birthRate = 1.0
-
-        CATransaction.begin()
-        CATransaction.setCompletionBlock {
-            let transition = CATransition()
-            transition.delegate = self
-            transition.type = .fade
-            transition.duration = 1
-            transition.timingFunction = CAMediaTimingFunction(name: .easeOut)
-            transition.setValue(layer, forKey: kAnimationLayerKey)
-            transition.isRemovedOnCompletion = false
-
-            layer.add(transition, forKey: nil)
-
-            layer.opacity = 0
-        }
         layer.add(animation, forKey: nil)
-        CATransaction.commit()
     }
 
     // MARK: UIView
@@ -145,17 +129,6 @@ public final class ConfettiView: UIView {
             emitterShape = .line
             emitterSize = CGSize(width: frame.size.width, height: 1.0)
             emitterPosition = CGPoint(x: frame.size.width / 2.0, y: 0)
-        }
-    }
-}
-
-// MARK: - CAAnimationDelegate
-
-extension ConfettiView: CAAnimationDelegate {
-    public func animationDidStop(_ animation: CAAnimation, finished flag: Bool) {
-        if let layer = animation.value(forKey: kAnimationLayerKey) as? CALayer {
-            layer.removeAllAnimations()
-            layer.removeFromSuperlayer()
         }
     }
 }
